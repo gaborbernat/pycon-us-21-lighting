@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>tox 4 🐍 - coming soon 🐍</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" id="theme" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme" />
+
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="img/favicon.ico" />
+  </head>
+  <body>
+    <style>
+      /*set bloomberg logo*/
+      @font-face {
+        font-family: "Jetbrains Mono";
+        src: url("./css/JetBrains\ Mono\ Regular\ Nerd\ Font\ Complete\ Mono.ttf");
+      }
+      .reveal code {
+        font-family: "JetBrains Mono";
+        font-size: 0.91em;
+        line-height: 1.2;
+      }
+      body {
+        background-image: url(img/bloomberg.svg) !important;
+        background-size: 11% !important;
+        background-repeat: no-repeat !important;
+        background-position: 99.5% 99.5% !important;
+      }
+      mark {
+        background-color: mediumseagreen;
+      }
+    </style>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1 class="r-fit-text">tox <span style="color: red">4</span></h1>
+          <h1 class="r-fit-text">coming soon</h1>
+          <h5>Lighting talk - PyCon US 2021 - 🌐 edition</h5>
+          <p>
+            <small
+              >by <a href="https://github.com/gaborbernat">Bernat Gabor</a> /
+              <a href="https://twitter.com/gjbernat">@gjbernat</a> /
+              <a href="https://github.com/bloomberg">Bloomberg</a>
+            </small>
+          </p>
+        </section>
+
+        <section>
+          <h3>Who am I?</h3>
+          <div>
+            <ul>
+              <li>software engineer at Bloomberg</li>
+              <li>
+                OSS contributor <a href="https://github.com/gaborbernat">gaborbernat@github</a> -
+                <a href="https://bernat.tech">https://bernat.tech</a>
+              </li>
+              <li>tox author and maintainer</li>
+              <li class="fragment">
+                😎 parent to two Yorkshire Terriers (Silky & Junior)
+                <div>
+                  <img src="./img/silky_junior.png" class="r-stretch" />
+                  <p style="font-size: 0.5em">Photo by Bernat Gabor - All rights reserved</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>Testing a library</h2>
+
+          <ol>
+            <li>
+              create virtual environment
+              <pre><code class="lang-bash" data-trim data-noescape>
+              virtualenv venv
+              </code></pre>
+            </li>
+            <li>
+              build (in a PEP-517/PEP-518 isolated environment) and install the package
+              <pre><code class="lang-bash" data-trim data-noescape>
+              pip install .
+
+              # or the longer form
+              # pyproject-build --sdist .
+              # .\venv\Scripts\pip install .\dist\pi_approx-1.0.0.tar.gz
+              </code></pre>
+            </li>
+            <li>
+              install test dependencies
+              <pre><code class="lang-bash" data-trim data-noescape>
+                .\venv\Scripts\pip.exe install 'pytest>=6'
+              </code></pre>
+            </li>
+            <li>
+              run test
+              <pre><code class="lang-bash" data-trim data-noescape>
+              .\venv\Scripts\pytest tests
+              </code></pre>
+            </li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Testing a library</h2>
+          <ol>
+            <li>
+              create a configuration file, tox.ini
+              <pre><code class="lang-ini" data-trim data-noescape>
+              [tox]
+              isolated_build = true
+
+              [testenv]
+              deps = pytest>=6
+              commands = pytest tests
+              </code></pre>
+            </li>
+            <li>
+              install tox (python project - e.g., via pipx) and then invoke it as:
+              <pre><code class="lang-bash" data-trim data-noescape>
+              tox -e py39
+              # bonus do this for any python version: tox -e py310,py38
+              </code></pre>
+            </li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>tox - status quo</h2>
+          <p>
+            today - first commit <span style="color: brown">Sat Jun 5 11:45:30 2010 +0200</span> - 4 million downloads
+            per month
+          </p>
+          <pre><code class="lang-bash" data-trim data-noescape>
+            ❯ tox --version
+            3.23.1 imported from c:\users\gabor\.local\pipx\venvs\tox\lib\site-packages\tox\__init__.py
+          </code></pre>
+
+          <div class="fragment">
+            <p>soon - complete rewrite <span style="color: brown">Sun Mar 29 15:35:05 2020 +0100</span></p>
+            <pre><code class="lang-bash" data-trim data-noescape>
+              ❯ tox --version
+              4.0.0 from c:\users\gabor\.local\pipx\venvs\tox\lib\site-packages\tox\__init__.py
+            </code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h2>Why rewrite?</h2>
+          <ul>
+            <li>Remove chains of technical debts</li>
+            <li>Improve performance</li>
+            <li>Improve interfaces to allow new features</li>
+          </ul>
+        </section>
+
+        <section data-background-video="img/end.mp4" data-background-video-loop data-background-video-muted>
+          <h1 style="color: black; position: fixed; right: 0; top: -700px">🙏 thank you 🙏</h1>
+        </section>
+      </div>
+    </div>
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script>
+      Reveal.initialize({
+        width: 1920,
+        height: 1080,
+        margin: 0.01,
+        minScale: 0.2,
+        maxScale: 2.0,
+        hash: true,
+        transition: "none",
+        history: true,
+        progress: false,
+        controls: false,
+        controlsTutorial: false,
+        plugins: [RevealHighlight, RevealMath],
+        math: {
+          mathjax: "https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js",
+          config: "TeX-AMS_HTML-full",
+          TeX: { Macros: { RR: "{\\bf R}" } },
+        },
+      });
+    </script>
+  </body>
+</html>
