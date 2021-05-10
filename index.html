@@ -62,7 +62,7 @@
               </li>
               <li>tox author and maintainer</li>
               <li class="fragment">
-                😎 parent to two Yorkshire Terriers (Silky & Junior)
+                😎 parent to two Yorkshire Terriers (Silky & Junior) with my wonderful fiancée Lisa
                 <div>
                   <img src="./img/silky_junior.png" class="r-stretch" />
                   <p style="font-size: 0.5em">Photo by Bernat Gabor - All rights reserved</p>
@@ -134,8 +134,9 @@
         <section>
           <h2>tox - status quo</h2>
           <p>
-            today - first commit <span style="color: brown">Sat Jun 5 11:45:30 2010 +0200</span> - 4 million downloads
-            per month
+            today 1992 commits - 4 million downloads per month - 14k lines <br />
+            first <span style="color: brown">Sat Jun 5 11:45:30 2010 +0200</span> - released
+            <span style="color: brown">12th July 2010</span>
           </p>
           <pre><code class="lang-bash" data-trim data-noescape>
             ❯ tox --version
@@ -143,7 +144,11 @@
           </code></pre>
 
           <div class="fragment">
-            <p>soon - complete rewrite <span style="color: brown">Sun Mar 29 15:35:05 2020 +0100</span></p>
+            <p>
+              soon 208+ commits - complete rewrite - 12.5k lines <br />
+              <span style="color: brown">Sun Mar 29 15:35:05 2020 +0100</span> - released
+              <span style="color: brown"> Q3/Q4 2021</span>
+            </p>
             <pre><code class="lang-bash" data-trim data-noescape>
               ❯ tox --version
               4.0.0 from c:\users\gabor\.local\pipx\venvs\tox\lib\site-packages\tox\__init__.py
@@ -152,13 +157,299 @@
         </section>
 
         <section>
-          <h2>Why rewrite?</h2>
+          <h2>Why rewrite? - contributor/maintainer</h2>
+          <p>Remove technical debts (drop Python 2 + add type hints)</p>
+
+          <pre><code style="max-height: 800px;" class="lang-python" data-trim data-noescape>
+          class TestenvConfig:
+              # Python 3 only, as __getattribute__ is ignored for old-style types on Python 2
+              def __getattribute__(self, name):
+                  rv = object.__getattribute__(self, name)
+                  if isinstance(rv, Exception):
+                      raise rv
+                  return rv
+
+              if six.PY2:
+
+                  def __getattr__(self, name):
+                      if name in self._missing_subs:
+                          raise self._missing_subs[name]
+                      raise AttributeError(name)
+
+              def get_envbindir(self):
+                  ...
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Why rewrite? - contributor/maintainer</h2>
+          <p>Remove technical debts (drop Python 2 + add type hints)</p>
+
+          <pre><code style="max-height: 800px;" class="lang-python" data-trim data-noescape>
+            from typing import Callable, Dict, Iterator, List, Mapping, Optional, Tuple
+
+            Replacer = Callable[[str, List[str]], str]
+            
+            class SetEnv:
+                def __init__(self, raw: str) -> None:
+                    self.replacer: Replacer = lambda s, c: s
+                    self._later: List[str] = []
+                    self._raw: Dict[str, str] = {}
+                    ...
+
+                def load(self, item: str, chain: Optional[List[str]] = None) -> str:
+                    if chain is None:
+                        chain = [f"env:{item}"]
+                    if item in self._materialized:
+                        return self._materialized[item]
+                    raw = self._raw[item]
+                    result = self.replacer(raw, chain)  # apply any replace options
+                    self._materialized[item] = result
+                    self._raw.pop(item, None)  # if the replace requires the env we may be called again, so allow pop to fail
+                    return result
+            
+                def __contains__(self, item: object) -> bool:
+                    return isinstance(item, str) and item in self.__iter__()
+                ...
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Why rewrite? - contributor/maintainer</h2>
+          <p>Better abstractions</p>
+          <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+          ❯ lsd  --tree .\src\tox\config
+           config
+          ├──  __init__.py
+          ├──  parallel.py
+          └──  reporter.py
+          </code></pre>
+
+          <pre><code style="max-height: 900px;" class="lang-bash" data-trim data-noescape>
+            ❯ lsd  --tree .\src\tox\config
+             config
+            ├──  __init__.py
+            ├──  cli
+            │  ├──  __init__.py
+            │  ├──  env_var.py
+            │  ├──  ini.py
+            │  ├──  parse.py
+            │  └──  parser.py
+            ├──  loader
+            │  ├──  __init__.py
+            │  ├──  api.py
+            │  ├──  convert.py
+            │  ├──  ini
+            │  │  ├──  __init__.py
+            │  │  ├──  factor.py
+            │  │  └──  replace.py
+            │  ├──  memory.py
+            │  ├──  str_convert.py
+            │  └──  stringify.py
+            ├──  main.py
+            ├──  of_type.py
+            ├──  set_env.py
+            ├──  sets.py
+            ├──  source
+            │  ├──  __init__.py
+            │  ├──  api.py
+            │  ├──  discover.py
+            │  ├──  ini.py
+            │  ├──  legacy_toml.py
+            │  ├──  setup_cfg.py
+            │  └──  tox_ini.py
+            └──  types.py
+            </code></pre>
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+          <p>Improve performance</p>
+          <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+            ❯ hyperfine 'tox4 -a' 'tox -a'
+            Benchmark #1: tox4 -a
+            Time (mean ± σ):     408.2 ms ±  24.6 ms    [User: 0.0 ms, System: 10.0 ms]
+            Range (min … max):   369.7 ms … 460.0 ms    10 runs
+
+            Benchmark #2: tox -a
+              Time (mean ± σ):      1.240 s ±  0.037 s    [User: 2.8 ms, System: 7.3 ms]
+              0  Range (min … max):    1.205 s …  1.334 s    10 runs
+
+            Summary
+              'tox4 -a' ran
+                3.04 ± 0.20 times faster than 'tox -a'
+            </code></pre>
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+          <p>More colors</p>
+          <img src="img/colors_tox3.PNG" class="r-stretch" />
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+          <p>More colors</p>
+          <img src="img/colors_tox4.PNG" class="r-stretch" />
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+          <p>Wheels support (not just sdist)</p>
+          <pre><code style="max-height: 800px;" class="lang-ini" data-trim data-noescape>
+          [testenv]
+          package = wheel
+          isolated_build_env = .pkg
+          </code></pre>
+          <img src="img/colors_tox4.PNG" class="r-stretch" />
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+          <p>Introduce new interfaces -> Future new features</p>
           <ul>
-            <li>Remove chains of technical debts (python 2)</li>
-            <li>Adopt new practices for code (typing)</li>
-            <li>Improve performance</li>
-            <li>Improve interfaces to allow new features</li>
+            <li>
+              Swap out virtual environments with conda environments
+              <pre><code class="lang-bash" data-trim data-noescape>
+              ❯ tox --runner conda
+              </code></pre>
+            </li>
+            <li class="fragment">
+              Swap out virtual environments with docker containers/images
+              <pre><code class="lang-bash" data-trim data-noescape>
+                ❯ tox --runner docker --image python:3.9
+                ❯ tox --runner docker --image ubuntu:latest
+                </code></pre>
+            </li>
+            <li class="fragment">
+              Remove built-in assumption of python environment (support for other languages: e.g., JavaScript):
+              <pre><code class="lang-bash" data-trim data-noescape>
+              ❯ tox -e package_js
+              </code></pre>
+            </li>
           </ul>
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+          <p>Better UI - separation of concerns</p>
+          <div>
+            <p>show default tox targets</p>
+            <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+          ❯ tox -l
+          py39
+          py38
+          </code></pre>
+          </div>
+
+          <div class="fragment">
+            <p>show all tox targets</p>
+            <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+          ❯ tox -a
+          py39
+          py38
+          extra
+          </code></pre>
+          </div>
+
+          <div class="fragment">
+            <p>show configuration values for a tox target</p>
+            <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+          ❯ tox --showconfig -e py39
+          [testenv:py39]
+          envdir = C:\Users\gabor\git\tox-ini-fmt\.tox\py39
+          setenv = SetenvDict: {'COVERAGE_FILE': '{toxworkdir}
+          ...
+          </code></pre>
+          </div>
+
+          <pre class="fragment"><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+          ❯ tox -a -l --showconfig -e py39
+          ???
+          </code></pre>
+
+          <div class="fragment">
+            <p>sub-commands to the rescue</p>
+            <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+              ❯ tox4 --help
+    
+              run (r)                   run environments
+              run-parallel (p)          run environments in parallel
+              depends (de)              visualize tox environment dependencies
+              list (l)                  list environments
+              devenv (d)                sets up a development environment at ENVDIR based on the tox configuration specified
+              config (c)                show tox configuration
+              quickstart (q)            Command line script to quickly create a tox config file for a Python project
+              legacy (le)               legacy entry-point command
+              </code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+
+          <ul>
+            Consistent configuration handling
+            <li>Every default can be changed via tox.ini config file</li>
+            <li></li>
+            <li></li>
+          </ul>
+
+          <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+            # config file: <mark>'C:\\Users\\gabor\\AppData\\Local\\tox\\tox\\config.ini' missing (change via env var TOX_CONFIG_FILE)</mark>
+            # <mark>[tox]</mark>
+            # <mark>color = 0</mark>
+            tox4 r -e test
+            </code></pre>
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+
+          <ul>
+            Consistent configuration handling
+            <li>Every default can be changed via tox.ini config file</li>
+            <li>Every default can be set via TOX_ env var</li>
+            <li></li>
+          </ul>
+
+          <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+            #
+            #
+            #
+            <mark>env TOX_COLOR=0</mark> tox4 r -e test
+            </code></pre>
+        </section>
+
+        <section>
+          <h2>Why rewrite? - user</h2>
+
+          <ul>
+            Consistent configuration handling
+            <li>Every default can be changed via tox.ini config file</li>
+            <li>Every default can be set via TOX_ env var</li>
+            <li>Every option can be overwritten via the -x flag</li>
+          </ul>
+
+          <pre><code style="max-height: 800px;" class="lang-bash" data-trim data-noescape>
+            #
+            #
+            #
+            env TOX_COLOR=0 tox4 r -e test <mark>-x testenv.base_python=python3.9</mark>
+            </code></pre>
+        </section>
+
+        <section>
+          <h2>How to help?</h2>
+          <p>Help us now so we don't have to test in PROD (your CI environments)</p>
+          <p>Try our <a href="https://pypi.org/project/tox/#history">pre-releases</a></p>
+          <img class="r-stretch" src="img/tox_pre.PNG" />
+          <pre><code class="lang-bash" data-trim data-noescape>
+            ❯ virtualenv venv
+            ❯ venv/bin/pip install tox --pre
+            ❯ venv/bin/tox4
+            </code></pre>
+          <p class="fragment">PS. we broke all plugins, if you maintain a plugin reach out to us</p>
         </section>
 
         <section data-background-video="img/end.mp4" data-background-video-loop data-background-video-muted>
