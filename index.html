@@ -39,8 +39,8 @@
     <div class="reveal">
       <div class="slides">
         <section>
-          <h1 class="r-fit-text">tox <span style="color: red">4</span></h1>
-          <h1 class="r-fit-text">coming soon</h1>
+          <h1 class="r-fit-text">tox <span style="color: red">4</span> - novelties</h1>
+          <h1 class="r-fit-text">why you should care</h1>
           <h5>Lighting talk - PyCon US 2021 - 🌐 edition</h5>
           <p>
             <small
@@ -122,7 +122,7 @@
               </code></pre>
             </li>
             <li>
-              install tox (python project - e.g., via pipx) and then invoke it as:
+              install tox (Python project - e.g., via pipx) and then invoke it as:
               <pre><code class="lang-bash" data-trim data-noescape>
               tox -e py39
               # bonus do this for any python version: tox -e py310,py38
@@ -315,14 +315,14 @@
               </code></pre>
             </li>
             <li class="fragment">
-              Swap out virtual environments with docker containers/images
+              Swap out virtual environments with Docker containers/images
               <pre><code class="lang-bash" data-trim data-noescape>
                 ❯ tox --runner docker --image python:3.9
                 ❯ tox --runner docker --image ubuntu:latest
                 </code></pre>
             </li>
             <li class="fragment">
-              Remove built-in assumption of python environment (support for other languages: e.g., JavaScript):
+              Remove built-in assumption of Python environment (support for other languages: e.g., JavaScript):
               <pre><code class="lang-bash" data-trim data-noescape>
               ❯ tox -e package_js
               </code></pre>
@@ -449,7 +449,7 @@
             ❯ venv/bin/pip install tox --pre
             ❯ venv/bin/tox4
             </code></pre>
-          <p class="fragment">PS. we broke all plugins, if you maintain a plugin reach out to us</p>
+          <p class="fragment">PS. we broke all the plugins; if you maintain a plugin, please reach out to us</p>
         </section>
 
         <section data-background-video="img/end.mp4" data-background-video-loop data-background-video-muted>
