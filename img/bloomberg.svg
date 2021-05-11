@@ -26,7 +26,7 @@
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
-     bordercolor="#666666"
+     bordercolor="#eeeeee"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -38,9 +38,9 @@
      inkscape:document-rotation="0"
      showgrid="false"
      inkscape:snap-global="false"
-     inkscape:window-width="3200"
-     inkscape:window-height="1288"
-     inkscape:window-x="1536"
+     inkscape:window-width="1252"
+     inkscape:window-height="1174"
+     inkscape:window-x="2240"
      inkscape:window-y="23"
      inkscape:window-maximized="0" />
   <metadata
@@ -51,7 +51,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -73,23 +73,21 @@
          sodipodi:role="line"
          x="53.371956"
          y="56.696426"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.7px;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#f2f2f2;fill-opacity:0.337255;stroke-width:0.264583"
-         id="tspan30"
-         dy="0"
-         rotate="0 0 0 0 0 0 0 0 0 0">Bloomberg</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.7px;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#eeeeee;fill-opacity:0.337255;stroke-width:0.264583"
+         id="tspan30">Bloomberg</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;white-space:pre;inline-size:73.2856;fill:#565a5c;fill-opacity:0.337255;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.23332999999999959px;line-height:1.25;font-family:sans-serif;white-space:pre;inline-size:73.2856;fill:#eeeeee;fill-opacity:0.33725491;stroke:none;stroke-width:0.264583;"
        x="101.02273"
        y="15.935132"
        id="text38"
        transform="matrix(0.9776533,0,0,1,-44.939187,46.903409)"><tspan
-         x="101.02273"
+         x="103.02273"
          y="15.935132"><tspan
-           style="font-size:4.23333px;fill:#ececec;fill-opacity:0.337255;stroke-width:0.264583">© 2021 Bloomberg Finance L.P.</tspan></tspan></text>
+           style="font-size:4.23333px;fill:#eeeeee;fill-opacity:0.337255;stroke-width:0.264583">© 2021 Bloomberg Finance L.P.</tspan></tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#565a5c;fill-opacity:0.337255;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.23332999999999959px;line-height:1.25;font-family:sans-serif;fill:#eeeeee;fill-opacity:0.33725491;stroke:none;stroke-width:0.264583;"
        x="67.34848"
        y="67.348488"
        id="text44"><tspan
@@ -97,6 +95,6 @@
          id="tspan42"
          x="67.34848"
          y="67.348488"
-         style="font-size:4.23333px;fill:#f2f2f2;fill-opacity:0.337255;stroke-width:0.264583">All rights reserved.</tspan></text>
+         style="font-size:4.23332999999999959px;fill:#eeeeee;fill-opacity:0.33725491;stroke-width:0.264583;">All rights reserved.</tspan></text>
   </g>
 </svg>
